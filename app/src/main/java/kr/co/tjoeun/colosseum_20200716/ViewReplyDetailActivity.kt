@@ -4,7 +4,9 @@ import android.content.Intent
 import android.icu.text.Replaceable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.activity_edit_reply.*
 import kotlinx.android.synthetic.main.activity_view_reply_detail.*
 import kotlinx.android.synthetic.main.activity_view_reply_detail.selectedSideTitleTxt
 import kotlinx.android.synthetic.main.activity_view_reply_detail.writerNickNameTxt
@@ -56,6 +58,48 @@ class ViewReplyDetailActivity : BaseActivity() {
         mReReplyAdapter = ReReplyAdapter(mContext, R.layout.re_reply_list_item, mReReplyList)
         reReplyListView.adapter = mReReplyAdapter
 
+        replyRegBtn.setOnClickListener {
+
+            val inputContent = replyEdt.text.toString()
+
+            if(inputContent.length  < 5) {
+                Toast.makeText(mContext,"5자 이상 입력해라",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            ServerUtil.postRequestReReply(mContext, mReplyId, inputContent, object : ServerUtil.JsonResponseHandler {
+                override fun onResponse(json: JSONObject) {
+
+                    val code = json.getInt("code")
+
+                    if (code == 200) {
+//                        의견 남기기에 성공하면 => 의견이 등록되었다는 토스트
+//                        작성 화면 종료
+
+                        runOnUiThread {
+                            Toast.makeText(mContext, "의견 등록에 성공했습니다.", Toast.LENGTH_SHORT).show()
+                        }
+
+                        getReplyFromServer()
+
+                    }
+                    else {
+//                        서버가 알려주는 의견 등록 사유를 화면에 토스트로 출력
+                        val message = json.getString("message")
+
+                        runOnUiThread {
+                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show()
+                        }
+
+
+                    }
+
+                }
+
+            })
+
+        }
+
     }
 
 //    서버에서 의견 정보 불러오기
@@ -71,6 +115,9 @@ class ViewReplyDetailActivity : BaseActivity() {
 //                replyObj 를  => Reply 클래스로 변환 => mReply에 저장
 
                 mReply = Reply.getReplyFromJson(replyObj)
+
+//                답글 목록은 누적되면 안됨 => 다 비워주고 다시 파싱
+                mReReplyList.clear()
 
 //                replies JSONArray 를 돌면서 => Reply로 변환해서 => mReReplyList에 추가
                 val replies = replyObj.getJSONArray("replies")
