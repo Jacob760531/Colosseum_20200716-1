@@ -5,5 +5,10 @@
     <color name="colorAccent">#03DAC5</color>
 
     <color name="textGray">#999999</color>
+    <color name="lightGray">#EFEFEF</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="naverRed">#FF5151</color>
+    <color name="naverBlue">#385DA3</color>
+
 </resources>
