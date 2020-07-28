@@ -74,18 +74,25 @@ class ReplyAdapter(
         if(data.myLike) {
 //            좋아요버튼의 배경을 => red_border_box로 변경
             likeBtn.setBackgroundResource(R.drawable.red_border_box)
+//            좋아요 버튼 글씨 => naverRed로 변경
+            likeBtn.setTextColor(mContext.resources.getColor(R.color.naverRed))
+
         } else {
 //            좋아요버튼의 배경을 => gray_border_box로 변경
             likeBtn.setBackgroundResource(R.drawable.gray_border_box)
+//            좋아요를 안찍었다면 gray로 돌려줘야함
+            likeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
         }
 
 //        내 싫어요 여부 반영
         if(data.myDisLike) {
 //            좋아요버튼의 배경을 => red_border_box로 변경
             dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
+            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.naverBlue))
         } else {
 //            좋아요버튼의 배경을 => gray_border_box로 변경
             dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
+            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
         }
 
 //        답글 버튼이 눌리면 => 의견 상세 화면으로 진입
