@@ -104,6 +104,7 @@ class ReplyAdapter(
 //                    이미 화면에 뿌려져 있는 data의 내용만 교체
 
                     data.likeCount = reply.likeCount
+                    data.dislikeCount = reply.dislikeCount
 
 //                    data의 값이 변경 => 리스트뷰를 구성하는 목록에 변경 => 어댑터.notifiDataSet 실행
 //                    어댑터 내부에 내장되어있으니 호출만 하면 끝
@@ -131,6 +132,8 @@ class ReplyAdapter(
             } )
         }
 
+//        싫어요 버튼 누르면 => 서버전달 + 갯수 반영 / 토스트 출력
+
         dislikeBtn.setOnClickListener {
 
             ServerUtil.postRequestReplyLickOrDislike(mContext,data.id,false, object : ServerUtil.JsonResponseHandler{
@@ -143,9 +146,18 @@ class ReplyAdapter(
 
 //                    이미 화면에 뿌려져 있는 data의 내용만 교체
 
+                    data.likeCount = reply.likeCount
                     data.dislikeCount = reply.dislikeCount
 
-                    notifyDataSetChanged()
+                    val uiHandler = Handler(Looper.getMainLooper())
+
+                    uiHandler.post {
+                        notifyDataSetChanged()
+                        val message = json.getString("message")
+                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show()
+
+                    }
+
                 }
 
             })
