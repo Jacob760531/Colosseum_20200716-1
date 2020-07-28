@@ -78,9 +78,15 @@ class ViewReplyDetailActivity : BaseActivity() {
 
                         runOnUiThread {
                             Toast.makeText(mContext, "의견 등록에 성공했습니다.", Toast.LENGTH_SHORT).show()
+
+//                            입력한 내용을 다시 빈칸으로 돌려주자.
+                            contentEdt.setText("")
+
                         }
 
                         getReplyFromServer()
+
+
 
                     }
                     else {
@@ -141,6 +147,10 @@ class ViewReplyDetailActivity : BaseActivity() {
 
 //                    댓글 목록을 불러왔다고 리스트뷰 어댑터에게 알림
                     mReReplyAdapter.notifyDataSetChanged()
+
+//                    리스트뷰의 맨 밑으로 끌어내리기
+                    reReplyListView.smoothScrollToPosition(mReReplyList.size-1)
+
 
                 }
             }
