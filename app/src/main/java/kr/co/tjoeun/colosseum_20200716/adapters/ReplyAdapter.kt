@@ -70,6 +70,24 @@ class ReplyAdapter(
         dislikeBtn.text = "싫어요 ${data.dislikeCount}"
         replyBtn.text = "답글 ${data.replyCount}"
 
+//        내 좋아요 여부 반영
+        if(data.myLike) {
+//            좋아요버튼의 배경을 => red_border_box로 변경
+            likeBtn.setBackgroundResource(R.drawable.red_border_box)
+        } else {
+//            좋아요버튼의 배경을 => gray_border_box로 변경
+            likeBtn.setBackgroundResource(R.drawable.gray_border_box)
+        }
+
+//        내 싫어요 여부 반영
+        if(data.myDisLike) {
+//            좋아요버튼의 배경을 => red_border_box로 변경
+            dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
+        } else {
+//            좋아요버튼의 배경을 => gray_border_box로 변경
+            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
+        }
+
 //        답글 버튼이 눌리면 => 의견 상세 화면으로 진입
         replyBtn.setOnClickListener {
 
@@ -105,6 +123,11 @@ class ReplyAdapter(
 
                     data.likeCount = reply.likeCount
                     data.dislikeCount = reply.dislikeCount
+
+//                    좋아요를 찍었는지 아닌지 체크
+                    data.myLike = reply.myLike
+                    data.myDisLike = reply.myDisLike
+
 
 //                    data의 값이 변경 => 리스트뷰를 구성하는 목록에 변경 => 어댑터.notifiDataSet 실행
 //                    어댑터 내부에 내장되어있으니 호출만 하면 끝
@@ -148,6 +171,8 @@ class ReplyAdapter(
 
                     data.likeCount = reply.likeCount
                     data.dislikeCount = reply.dislikeCount
+                    data.myLike = reply.myLike
+                    data.myDisLike = reply.myDisLike
 
                     val uiHandler = Handler(Looper.getMainLooper())
 
