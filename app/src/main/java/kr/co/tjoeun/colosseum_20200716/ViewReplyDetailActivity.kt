@@ -80,14 +80,11 @@ class ViewReplyDetailActivity : BaseActivity() {
                             Toast.makeText(mContext, "의견 등록에 성공했습니다.", Toast.LENGTH_SHORT).show()
 
 //                            입력한 내용을 다시 빈칸으로 돌려주자.
-                            contentEdt.setText("")
+                            replyEdt.setText("")
 
                         }
 
                         getReplyFromServer()
-
-
-
                     }
                     else {
 //                        서버가 알려주는 의견 등록 사유를 화면에 토스트로 출력
