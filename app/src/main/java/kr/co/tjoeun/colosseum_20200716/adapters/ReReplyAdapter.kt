@@ -74,7 +74,7 @@ class ReReplyAdapter(
             dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
             dislikeBtn.setTextColor(mContext.resources.getColor(R.color.naverBlue))
         } else {
-            dislikeBtn.setBackgroundColor(R.drawable.gray_border_box)
+            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
             dislikeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
         }
 
