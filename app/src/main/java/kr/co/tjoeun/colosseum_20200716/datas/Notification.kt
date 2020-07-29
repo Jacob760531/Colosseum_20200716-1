@@ -17,7 +17,7 @@ class Notification {
     companion object {
 
 //        simpleDateFormat은 고정양식 -> 한번만 만들고 재활용
-        val sdf = SimpleDateFormat("yyyy-mm-dd HH:mm:ss")
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 
         fun getNotificationFromJson(json: JSONObject) : Notification {
             val s = Notification()

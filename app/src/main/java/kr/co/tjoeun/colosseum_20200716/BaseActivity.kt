@@ -17,6 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
 //    BaseActivity를 상속받는 모든 액티비티들이 이 변수를 상속받게 된다.
 
     lateinit var notificationBtn : ImageView
+    lateinit var notiCountTxt : ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +49,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
 //        액션바 XML에 있는 뷰들을 => 코틀린에서 사용할 수 있도록 연결
         notificationBtn = myActionBar.customView.findViewById(R.id.notificationBtn)
+        notiCountTxt = myActionBar.customView.findViewById(R.id.notiCountTxt)
 
     }
 

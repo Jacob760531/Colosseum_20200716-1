@@ -13,15 +13,36 @@
         android:layout_gravity="center"
         android:textSize="20sp" />
 
-    <ImageView
-        android:id="@+id/notificationBtn"
+    <FrameLayout
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:padding="5dp"
-        android:visibility="gone"
-        android:src="@drawable/noti_icon"
         android:layout_gravity="right|center_vertical"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp">
+
+        <ImageView
+            android:id="@+id/notificationBtn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="5dp"
+            android:visibility="visible"
+
+            android:src="@drawable/noti_icon" />
+
+        <TextView
+            android:id="@+id/notiCountTxt"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:layout_gravity="right"
+            android:textSize="10sp"
+            android:background="@drawable/red_circle"
+            android:layout_marginTop="3dp"
+            android:layout_marginRight="3dp"
+            android:text="23" />
+
+
+    </FrameLayout>
 
 
 </FrameLayout>
