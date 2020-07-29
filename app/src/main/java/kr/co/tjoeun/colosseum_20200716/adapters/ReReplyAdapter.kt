@@ -61,90 +61,19 @@ class ReReplyAdapter(
 
         dislikeBtn.text = "싫어요 ${data.dislikeCount}"
 
-//        내 좋아요 여부 반영
-        if(data.myLike) {
-//            좋아요버튼의 배경을 => red_border_box로 변경
-            likeBtn.setBackgroundResource(R.drawable.red_border_box)
-//            좋아요 버튼 글씨 => naverRed로 변경
-            likeBtn.setTextColor(mContext.resources.getColor(R.color.naverRed))
 
-        } else {
-//            좋아요버튼의 배경을 => gray_border_box로 변경
-            likeBtn.setBackgroundResource(R.drawable.gray_border_box)
-//            좋아요를 안찍었다면 gray로 돌려줘야함
-            likeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
-        }
+//        좋아요 / 싫어요 모두 실행하는 코드가 동일하니 두개의 버튼이 눌리면 할 일 (object : ??)을 변수에 담아두고 버튼에 붙이자
 
-//        내 싫어요 여부 반영
-        if(data.myDisLike) {
-//            좋아요버튼의 배경을 => red_border_box로 변경
-            dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
-            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.naverBlue))
-        } else {
-//            좋아요버튼의 배경을 => gray_border_box로 변경
-            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
-            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
-        }
+        val sendLikeOrDisLikeCode = View.OnClickListener {
 
-        likeBtn.setOnClickListener {
-
-            ServerUtil.postRequestReplyLickOrDislike(mContext,data.id, true, object : ServerUtil.JsonResponseHandler{
-                override fun onResponse(json: JSONObject) {
-//                    변경된 좋아요 갯수 / 싫어요 갯수를 파악해서 버튼 문구를 새로고침
-//                    목록에 뿌려지는 data의 좋아요/싫어요 갯수를 변경
-
-                    val dataObj = json.getJSONObject("data")
-                    val replyObj = dataObj.getJSONObject("reply")
-
-                    val reply = Reply.getReplyFromJson(replyObj)
-
-//                    이미 화면에 뿌려져 있는 data의 내용만 교체
-
-                    data.likeCount = reply.likeCount
-                    data.dislikeCount = reply.dislikeCount
-
-//                    좋아요를 찍었는지 아닌지 체크
-                    data.myLike = reply.myLike
-                    data.myDisLike = reply.myDisLike
-
-
-//                    data의 값이 변경 => 리스트뷰를 구성하는 목록에 변경 => 어댑터.notifiDataSet 실행
-//                    어댑터 내부에 내장되어있으니 호출만 하면 끝
-
-//                    새로고침 => UI변경 => runOnUiThread 등으로 UI 쓰레드로 처리해야함
-//                    어댑터는 runOnUiThread 기능이 없다.
-
-//                    Handler 을 이용해서 => UI쓰레드에 접근하자
-
-                    var uiHandler = Handler(Looper.getMainLooper())
-
-                    uiHandler.post {
-                        notifyDataSetChanged()
-
-//                        서버가 알려주는 메세지를 토스트로 출력
-                        val message = json.getString("message")
-
-                        Toast.makeText(mContext,message, Toast.LENGTH_SHORT).show()
-                    }
-
-
-
-
-                }
-            } )
-        }
-
-        dislikeBtn.setOnClickListener {
-
-            ServerUtil.postRequestReplyLickOrDislike(mContext,data.id,false, object : ServerUtil.JsonResponseHandler{
+//             서버에 좋아요 / 싫어요 중 하나를 보내주자.
+//            it: View! 에 달린 태크값을 Boolean으로 변환해서 좋아요/싫어요 구별
+//            태그 -> String -> Boolean
+            ServerUtil.postRequestReplyLickOrDislike(mContext,data.id, it.tag.toString().toBoolean(), object : ServerUtil.JsonResponseHandler{
                 override fun onResponse(json: JSONObject) {
 
                     val dataObj = json.getJSONObject("data")
-                    val replyObj = dataObj.getJSONObject("reply")
-
-                    val reply = Reply.getReplyFromJson(replyObj)
-
-//                    이미 화면에 뿌려져 있는 data의 내용만 교체
+                    val reply = Reply.getReplyFromJson(dataObj.getJSONObject("reply"))
 
                     data.likeCount = reply.likeCount
                     data.dislikeCount = reply.dislikeCount
@@ -155,15 +84,126 @@ class ReReplyAdapter(
 
                     uiHandler.post {
                         notifyDataSetChanged()
-                        val message = json.getString("message")
-                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show()
-
                     }
 
                 }
 
+
             })
+
         }
+
+//        좋아요버튼 / 싫어요버튼이 크릭되면 -> sendLikeOrDisLikeCode 내부의 내용을 실행하게 하자
+        likeBtn.setOnClickListener(sendLikeOrDisLikeCode)
+        dislikeBtn.setOnClickListener(sendLikeOrDisLikeCode)
+
+
+////       **** 기존 방식
+//
+////        내 좋아요 여부 반영
+//        if(data.myLike) {
+////            좋아요버튼의 배경을 => red_border_box로 변경
+//            likeBtn.setBackgroundResource(R.drawable.red_border_box)
+////            좋아요 버튼 글씨 => naverRed로 변경
+//            likeBtn.setTextColor(mContext.resources.getColor(R.color.naverRed))
+//
+//        } else {
+////            좋아요버튼의 배경을 => gray_border_box로 변경
+//            likeBtn.setBackgroundResource(R.drawable.gray_border_box)
+////            좋아요를 안찍었다면 gray로 돌려줘야함
+//            likeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
+//        }
+//
+////        내 싫어요 여부 반영
+//        if(data.myDisLike) {
+////            좋아요버튼의 배경을 => red_border_box로 변경
+//            dislikeBtn.setBackgroundResource(R.drawable.blue_border_box)
+//            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.naverBlue))
+//        } else {
+////            좋아요버튼의 배경을 => gray_border_box로 변경
+//            dislikeBtn.setBackgroundResource(R.drawable.gray_border_box)
+//            dislikeBtn.setTextColor(mContext.resources.getColor(R.color.textGray))
+//        }
+//
+//        likeBtn.setOnClickListener {
+//
+//            ServerUtil.postRequestReplyLickOrDislike(mContext,data.id, true, object : ServerUtil.JsonResponseHandler{
+//                override fun onResponse(json: JSONObject) {
+////                    변경된 좋아요 갯수 / 싫어요 갯수를 파악해서 버튼 문구를 새로고침
+////                    목록에 뿌려지는 data의 좋아요/싫어요 갯수를 변경
+//
+//                    val dataObj = json.getJSONObject("data")
+//                    val replyObj = dataObj.getJSONObject("reply")
+//
+//                    val reply = Reply.getReplyFromJson(replyObj)
+//
+////                    이미 화면에 뿌려져 있는 data의 내용만 교체
+//
+//                    data.likeCount = reply.likeCount
+//                    data.dislikeCount = reply.dislikeCount
+//
+////                    좋아요를 찍었는지 아닌지 체크
+//                    data.myLike = reply.myLike
+//                    data.myDisLike = reply.myDisLike
+//
+//
+////                    data의 값이 변경 => 리스트뷰를 구성하는 목록에 변경 => 어댑터.notifiDataSet 실행
+////                    어댑터 내부에 내장되어있으니 호출만 하면 끝
+//
+////                    새로고침 => UI변경 => runOnUiThread 등으로 UI 쓰레드로 처리해야함
+////                    어댑터는 runOnUiThread 기능이 없다.
+//
+////                    Handler 을 이용해서 => UI쓰레드에 접근하자
+//
+//                    var uiHandler = Handler(Looper.getMainLooper())
+//
+//                    uiHandler.post {
+//                        notifyDataSetChanged()
+//
+////                        서버가 알려주는 메세지를 토스트로 출력
+//                        val message = json.getString("message")
+//
+//                        Toast.makeText(mContext,message, Toast.LENGTH_SHORT).show()
+//                    }
+//
+//
+//
+//
+//                }
+//            } )
+//        }
+//
+//        dislikeBtn.setOnClickListener {
+//
+//            ServerUtil.postRequestReplyLickOrDislike(mContext,data.id,false, object : ServerUtil.JsonResponseHandler{
+//                override fun onResponse(json: JSONObject) {
+//
+//                    val dataObj = json.getJSONObject("data")
+//                    val replyObj = dataObj.getJSONObject("reply")
+//
+//                    val reply = Reply.getReplyFromJson(replyObj)
+//
+////                    이미 화면에 뿌려져 있는 data의 내용만 교체
+//
+//                    data.likeCount = reply.likeCount
+//                    data.dislikeCount = reply.dislikeCount
+//                    data.myLike = reply.myLike
+//                    data.myDisLike = reply.myDisLike
+//
+//                    val uiHandler = Handler(Looper.getMainLooper())
+//
+//                    uiHandler.post {
+//                        notifyDataSetChanged()
+//                        val message = json.getString("message")
+//                        Toast.makeText(mContext,message,Toast.LENGTH_SHORT).show()
+//
+//                    }
+//
+//                }
+//
+//            })
+//        }
+//        **** 기존방식 END
 
 
 
