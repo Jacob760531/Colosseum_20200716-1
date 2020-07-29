@@ -2,6 +2,7 @@ package kr.co.tjoeun.colosseum_20200716
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -17,7 +18,7 @@ abstract class BaseActivity : AppCompatActivity() {
 //    BaseActivity를 상속받는 모든 액티비티들이 이 변수를 상속받게 된다.
 
     lateinit var notificationBtn : ImageView
-    lateinit var notiCountTxt : ImageView
+    lateinit var notiCountTxt : TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
